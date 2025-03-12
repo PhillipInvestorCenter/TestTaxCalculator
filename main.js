@@ -337,7 +337,7 @@ function nextStep(currentStep) {
               <input type="radio" name="expense_choice_3" value="actual"> หักตามจริง
             </div>
             <div id="expense_actual_container_3" style="display:none;">
-              <input type="text" id="expense_actual_3" placeholder="ระบุค่าใช้จ่ายจริง" value="0">
+              <input type="text" id="expense_actual_3" placeholder="ระบุค่าใช้จ่ายจริง" value="0" inputmode="decimal">
             </div>
           </div>`;
       }
@@ -350,7 +350,7 @@ function nextStep(currentStep) {
               <input type="radio" name="expense_choice_5" value="actual"> หักตามจริง
             </div>
             <div id="expense_actual_container_5" style="display:none;">
-              <input type="text" id="expense_actual_5" placeholder="ระบุค่าใช้จ่ายจริง" value="0">
+              <input type="text" id="expense_actual_5" placeholder="ระบุค่าใช้จ่ายจริง" value="0" inputmode="decimal">
             </div>
           </div>`;
       }
@@ -363,7 +363,7 @@ function nextStep(currentStep) {
               <input type="radio" name="expense_choice_6" value="actual"> หักตามจริง
             </div>
             <div id="expense_actual_container_6" style="display:none;">
-              <input type="text" id="expense_actual_6" placeholder="ระบุค่าใช้จ่ายจริง" value="0">
+              <input type="text" id="expense_actual_6" placeholder="ระบุค่าใช้จ่ายจริง" value="0" inputmode="decimal">
             </div>
           </div>`;
       }
@@ -376,7 +376,7 @@ function nextStep(currentStep) {
               <input type="radio" name="expense_choice_7" value="actual"> หักตามจริง
             </div>
             <div id="expense_actual_container_7" style="display:none;">
-              <input type="text" id="expense_actual_7" placeholder="ระบุค่าใช้จ่ายจริง" value="0">
+              <input type="text" id="expense_actual_7" placeholder="ระบุค่าใช้จ่ายจริง" value="0" inputmode="decimal">
             </div>
           </div>`;
       }
