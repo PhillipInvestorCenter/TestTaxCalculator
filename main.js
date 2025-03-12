@@ -111,13 +111,15 @@ window.onload = function () {
     updateDeductionLimits();
   });
 
-  // Add real-time clamping event listeners for retirement and other deduction fields
+  // Add real-time clamping event listeners for retirement deduction fields
   retirementFields.forEach(fieldId => {
     const elem = document.getElementById(fieldId);
     if (elem) {
       elem.addEventListener('input', () => handleRetirementFieldChange(fieldId));
     }
   });
+  
+  // Add real-time clamping event listeners for other deduction fields
   otherDeductionFields.forEach(fieldId => {
     const elem = document.getElementById(fieldId);
     if (elem) {
@@ -324,7 +326,7 @@ function nextStep(currentStep) {
       total_income = rev1_amt + rev2_amt + rev3_amt + rev4_amt + rev5_amt + rev6_amt + rev7_amt;
       monthly_income = (calcMode === 'month') ? parseNumber(document.getElementById('rev1_amount').value) : total_income / 12;
       
-      // Build Step 2 UI for types 3, 5, 6, 7 with numeric inputs (only numbers and decimals)
+      // Build Step 2 UI for types 3, 5, 6, 7
       let customExpenseHTML = "";
       if (document.getElementById('rev_type_3').checked) {
         customExpenseHTML += `
@@ -335,7 +337,7 @@ function nextStep(currentStep) {
               <input type="radio" name="expense_choice_3" value="actual"> หักตามจริง
             </div>
             <div id="expense_actual_container_3" style="display:none;">
-              <input type="number" step="any" inputmode="decimal" id="expense_actual_3" placeholder="ระบุค่าใช้จ่ายจริง" value="0">
+              <input type="text" id="expense_actual_3" placeholder="ระบุค่าใช้จ่ายจริง" value="0">
             </div>
           </div>`;
       }
@@ -348,7 +350,7 @@ function nextStep(currentStep) {
               <input type="radio" name="expense_choice_5" value="actual"> หักตามจริง
             </div>
             <div id="expense_actual_container_5" style="display:none;">
-              <input type="number" step="any" inputmode="decimal" id="expense_actual_5" placeholder="ระบุค่าใช้จ่ายจริง" value="0">
+              <input type="text" id="expense_actual_5" placeholder="ระบุค่าใช้จ่ายจริง" value="0">
             </div>
           </div>`;
       }
@@ -361,7 +363,7 @@ function nextStep(currentStep) {
               <input type="radio" name="expense_choice_6" value="actual"> หักตามจริง
             </div>
             <div id="expense_actual_container_6" style="display:none;">
-              <input type="number" step="any" inputmode="decimal" id="expense_actual_6" placeholder="ระบุค่าใช้จ่ายจริง" value="0">
+              <input type="text" id="expense_actual_6" placeholder="ระบุค่าใช้จ่ายจริง" value="0">
             </div>
           </div>`;
       }
@@ -374,7 +376,7 @@ function nextStep(currentStep) {
               <input type="radio" name="expense_choice_7" value="actual"> หักตามจริง
             </div>
             <div id="expense_actual_container_7" style="display:none;">
-              <input type="number" step="any" inputmode="decimal" id="expense_actual_7" placeholder="ระบุค่าใช้จ่ายจริง" value="0">
+              <input type="text" id="expense_actual_7" placeholder="ระบุค่าใช้จ่ายจริง" value="0">
             </div>
           </div>`;
       }
@@ -616,7 +618,7 @@ function validateStep(stepNumber) {
 function resetPage1() {
   let step1 = document.getElementById('step-1');
   if (step1) {
-    let inputs = step1.querySelectorAll('input[type="text"], input[type="number"]');
+    let inputs = step1.querySelectorAll('input[type="text"]');
     inputs.forEach(input => input.value = "0");
     let selects = step1.querySelectorAll('select');
     selects.forEach(select => select.selectedIndex = 0);
@@ -632,7 +634,7 @@ function resetPage1() {
 function resetPage3() {
   let step3 = document.getElementById('step-3');
   if (step3) {
-    let inputs = step3.querySelectorAll('input[type="text"], input[type="number"]');
+    let inputs = step3.querySelectorAll('input[type="text"]');
     inputs.forEach(input => input.value = "0");
     let selects = step3.querySelectorAll('select');
     selects.forEach(select => select.selectedIndex = 0);
