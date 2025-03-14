@@ -257,7 +257,13 @@ function calculateTax() {
   if (leftoverThaiesg < 0) leftoverThaiesg = 0;
   
   // Update the recommended-investments section
-  updateInvestmentDisplay('max_ssf', leftoverSSF);
+  if (selectedTaxYear === 2567) {
+    updateInvestmentDisplay('max_ssf', leftoverSSF);
+    document.getElementById('max_ssf').parentElement.style.display = 'block';
+  } else {
+    // Hide SSF recommendation for tax year 2568
+    document.getElementById('max_ssf').parentElement.style.display = 'none';
+  }
   updateInvestmentDisplay('max_rmf', leftoverRMF);
   updateInvestmentDisplay('max_thaiesg', leftoverThaiesg);
   
