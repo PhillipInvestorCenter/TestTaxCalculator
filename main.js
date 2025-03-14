@@ -32,7 +32,6 @@ const otherDeductionFields = [
   'new_home'
 ];
 
-// Window onload initialization
 window.onload = function () {
   const numberFields = [
     'rev1_amount', 'rev1_withholding_input',
@@ -48,7 +47,8 @@ window.onload = function () {
     'pension_insurance', 'ssf', 'rmf', 'pvd', 'gpf', 'thaiesg',
     'social_enterprise', 'nsf', 'home_loan_interest', 'donation',
     'donation_education', 'donation_political', 'easy_ereceipt',
-    'local_travel', 'new_home', 'social_security'
+    'local_travel', 'new_home', 'social_security',
+    'thaiesg_extra_transfer', 'thaiesg_extra_new'
   ];
   numberFields.forEach((id) => {
     addCommaEvent(id);
@@ -126,6 +126,15 @@ window.onload = function () {
       elem.addEventListener('input', () => handleOtherDeductionFieldChange(fieldId));
     }
   });
+  
+  // Also add event listeners for new Thai ESG Extra fields
+  ['thaiesg_extra_transfer', 'thaiesg_extra_new'].forEach(fieldId => {
+    const elem = document.getElementById(fieldId);
+    if (elem) {
+      addCommaEvent(fieldId);
+      elem.addEventListener('input', () => handleOtherDeductionFieldChange(fieldId));
+    }
+  });
 
   // Stepper click event listeners
   const stepperSteps = document.querySelectorAll('.stepper .stepper-step');
@@ -156,13 +165,10 @@ window.onload = function () {
     const docHeight = document.documentElement.scrollHeight;
     const threshold = 50; // threshold in pixels
     if (scrollTop < threshold) {
-      // Near top: display down arrow icon
       scrollArrow.innerHTML = "&#x2193;"; // down arrow
     } else if (scrollTop + windowHeight > docHeight - threshold) {
-      // Near bottom: display up arrow icon
       scrollArrow.innerHTML = "&#x2191;"; // up arrow
     } else {
-      // In the middle: default to down arrow
       scrollArrow.innerHTML = "&#x2193;";
     }
   });
@@ -243,7 +249,7 @@ function setupRevenueTypeListeners() {
 }
 
 /** 
- * Called when user clicks one of the tax year buttons on landing page 
+ * Called when user clicks one of the tax year buttons on the landing page 
  */
 function startCalculator(taxYear) {
   selectedTaxYear = taxYear;
@@ -252,9 +258,17 @@ function startCalculator(taxYear) {
     if (ssfContainer) ssfContainer.style.display = 'none';
     const ssfInput = document.getElementById('ssf');
     if (ssfInput) ssfInput.value = '0';
+
+    // Show new Thai ESG Extra fields for tax year 2568
+    const thaiesgExtraContainer = document.getElementById('thaiesg_extra_container');
+    if (thaiesgExtraContainer) thaiesgExtraContainer.style.display = 'block';
   } else {
     const ssfContainer = document.getElementById('ssf_container');
     if (ssfContainer) ssfContainer.style.display = 'block';
+
+    // Hide new Thai ESG Extra fields for non-2568 years
+    const thaiesgExtraContainer = document.getElementById('thaiesg_extra_container');
+    if (thaiesgExtraContainer) thaiesgExtraContainer.style.display = 'none';
   }
   if (selectedTaxYear === 2568) {
     const localTravelContainer = document.getElementById('local_travel_container');
@@ -391,7 +405,6 @@ function nextStep(currentStep) {
           radio.addEventListener('change', function() {
             const container = document.getElementById("expense_actual_container_" + type);
             if (this.value === "actual") {
-              // Reset the actual input to "0" when switching to actual
               const actualInput = document.getElementById("expense_actual_"+type);
               if (actualInput) actualInput.value = "0";
               container.style.display = 'block';
@@ -402,7 +415,6 @@ function nextStep(currentStep) {
           });
         });
 
-        // For each actual expense input, add focus listener to clear "0"
         let actualInput = document.getElementById("expense_actual_" + type);
         if (actualInput) {
           addCommaEvent("expense_actual_" + type);
@@ -415,7 +427,6 @@ function nextStep(currentStep) {
         }
       });
 
-      // Initial expense calculation for Step 2
       recalcExpenses();
 
       setActiveStep(2);
@@ -434,10 +445,8 @@ function nextStep(currentStep) {
  * Recalculates the total expense in real time (Step 2) and updates the display.
  */
 function recalcExpenses() {
-  // Expense for types 1 & 2
   let expense_12 = Math.min((rev1_amt + rev2_amt) * 0.5, 100000);
 
-  // For type 3
   let expense_3 = 0;
   if (document.getElementById('rev_type_3').checked) {
     let choice3 = document.querySelector('input[name="expense_choice_3"]:checked');
@@ -448,7 +457,6 @@ function recalcExpenses() {
     }
   }
 
-  // For type 5
   let expense_5 = 0;
   if (document.getElementById('rev_type_5').checked) {
     let choice5 = document.querySelector('input[name="expense_choice_5"]:checked');
@@ -485,7 +493,6 @@ function recalcExpenses() {
     }
   }
 
-  // For type 6
   let expense_6 = 0;
   if (document.getElementById('rev_type_6').checked) {
     let choice6 = document.querySelector('input[name="expense_choice_6"]:checked');
@@ -507,7 +514,6 @@ function recalcExpenses() {
     }
   }
 
-  // For type 7
   let expense_7 = 0;
   if (document.getElementById('rev_type_7').checked) {
     let choice7 = document.querySelector('input[name="expense_choice_7"]:checked');
@@ -614,78 +620,121 @@ function validateStep(stepNumber) {
   return true;
 }
 
-// Reset Step 1 fields
-function resetPage1() {
-  let step1 = document.getElementById('step-1');
-  if (step1) {
-    let inputs = step1.querySelectorAll('input[type="text"]');
-    inputs.forEach(input => input.value = "0");
-    let selects = step1.querySelectorAll('select');
-    selects.forEach(select => select.selectedIndex = 0);
-    let checkboxes = step1.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(cb => {
-      cb.checked = false;
-      cb.dispatchEvent(new Event('change'));
-    });
+// Updated Reset Function: Resets all inputs, checkboxes, radio buttons, and hides dynamic sections.
+function resetData() {
+  // Reset global variables
+  total_income = 0;
+  monthly_income = 0;
+  expense = 0;
+  isTaxCalculated = false;
+  total_withholding_tax = 0;
+  socialSecurityManual = false;
+  
+  // Reset all text inputs to "0"
+  document.querySelectorAll('input[type="text"]').forEach((input) => {
+    input.value = "0";
+  });
+  
+  // Reset all checkboxes and dispatch change event to hide dependent sections
+  document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+    checkbox.checked = false;
+    checkbox.dispatchEvent(new Event('change'));
+  });
+  
+  // Reset all radio buttons and dispatch change event
+  document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+    radio.checked = false;
+    radio.dispatchEvent(new Event('change'));
+  });
+  
+  // Reset all select elements to first option and dispatch change event
+  document.querySelectorAll('select').forEach((select) => {
+    select.selectedIndex = 0;
+    select.dispatchEvent(new Event('change'));
+  });
+  
+  // Hide dynamic sections
+  const sectionsToHide = [
+    'rev_type_1_input', 'rev_type_2_input', 'rev_type_3_input', 'rev_type_4_input',
+    'rev_type_5_input', 'rev_type_6_input', 'rev_type_7_input',
+    'rev1_withholding_input_container', 'rev2_withholding_input_container',
+    'rev3_withholding_input_container', 'rev4_withholding_input_container',
+    'rev5_withholding_input_container', 'rev6_withholding_input_container',
+    'rev7_withholding_input_container',
+    'expense_actual_container_3', 'expense_actual_container_5',
+    'expense_actual_container_6', 'expense_actual_container_7',
+    'insurance_section', 'donation_section', 'stimulus_section',
+    'social_security_section', 'thaiesg_extra_container'
+  ];
+  sectionsToHide.forEach((id) => {
+    const elem = document.getElementById(id);
+    if (elem) elem.style.display = 'none';
+  });
+  
+  // Reset displayed calculated values
+  document.getElementById('expense_display').innerText = '0';
+  document.getElementById('result_withholding_tax').innerText = '0';
+  const taxSummary = document.getElementById('tax_summary');
+  if (taxSummary) taxSummary.style.display = 'none';
+  
+  // Clear error messages
+  document.querySelectorAll('.error').forEach((el) => {
+    el.innerText = '';
+  });
+  
+  // Reset the stepper and go back to step 1
+  if (typeof setActiveStep === 'function') {
+    setActiveStep(1);
   }
-}
-
-// Reset Step 3 fields
-function resetPage3() {
-  let step3 = document.getElementById('step-3');
-  if (step3) {
-    let inputs = step3.querySelectorAll('input[type="text"]');
-    inputs.forEach(input => input.value = "0");
-    let selects = step3.querySelectorAll('select');
-    selects.forEach(select => select.selectedIndex = 0);
-    let checkboxes = step3.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(cb => {
-      cb.checked = false;
-      cb.dispatchEvent(new Event('change'));
-    });
+  if (typeof showStep === 'function') {
+    showStep(1);
+  }
+  
+  // Show landing page and hide main container
+  const landingPage = document.getElementById('landing-page');
+  const mainContainer = document.getElementById('main-container');
+  if (landingPage && mainContainer) {
+    landingPage.style.display = 'flex';
+    mainContainer.style.display = 'none';
+  }
+  
+  // Scroll to the top of the page
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  // Update deduction limits after resetting
+  if (typeof updateDeductionLimits === 'function') {
+    updateDeductionLimits();
   }
 }
 
 /* ---------------------- Floating Scroll Arrow ---------------------- */
-// Always display the scroll arrow; update its icon based on scroll position.
 window.addEventListener("scroll", function() {
   const scrollArrow = document.getElementById("scrollArrow");
   scrollArrow.style.display = "block";
   const scrollTop = window.pageYOffset;
   const windowHeight = window.innerHeight;
   const docHeight = document.documentElement.scrollHeight;
-  const threshold = 50; // threshold in pixels
+  const threshold = 50;
   if (scrollTop < threshold) {
-    // Near top: display down arrow icon
-    scrollArrow.innerHTML = "&#x2193;"; // down arrow
+    scrollArrow.innerHTML = "&#x2193;";
   } else if (scrollTop + windowHeight > docHeight - threshold) {
-    // Near bottom: display up arrow icon
-    scrollArrow.innerHTML = "&#x2191;"; // up arrow
+    scrollArrow.innerHTML = "&#x2191;";
   } else {
-    // In the middle: default to down arrow
     scrollArrow.innerHTML = "&#x2193;";
   }
 });
 
-/**
- * When the scroll arrow is clicked, check the current position.
- * If at (or near) the top, scroll down to the bottom edge.
- * If at (or near) the bottom, scroll up to the top.
- */
 function scrollPage() {
   const scrollTop = window.pageYOffset;
   const windowHeight = window.innerHeight;
   const docHeight = document.documentElement.scrollHeight;
-  const threshold = 50; // threshold in pixels
+  const threshold = 50;
 
   if (scrollTop < threshold) {
-    // At or near top: scroll to bottom edge.
     window.scrollTo({ top: docHeight - windowHeight, behavior: 'smooth' });
   } else if (scrollTop + windowHeight > docHeight - threshold) {
-    // At or near bottom: scroll to top.
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
-    // In the middle: default to scrolling to the bottom.
     window.scrollTo({ top: docHeight - windowHeight, behavior: 'smooth' });
   }
 }
