@@ -114,7 +114,20 @@ function calculateTax() {
     if (retirement_total > 500000) {
       retirement_total = 500000;
     }
-    total_investment_deductions = insurance_total + parent_health_val + retirement_total + thaiesgVal + socialEntVal;
+    
+    // For Tax Year 2568, include the two new Thai ESG Extra deductions.
+    // Each field is clamped to the lower of 300,000 or 30% of total income.
+    let thaiesgExtraTransferVal = 0;
+    let thaiesgExtraNewVal = 0;
+    if (selectedTaxYear === 2568) {
+      thaiesgExtraTransferVal = parseNumber(document.getElementById('thaiesg_extra_transfer').value) || 0;
+      thaiesgExtraNewVal = parseNumber(document.getElementById('thaiesg_extra_new').value) || 0;
+      let maxExtraLimit = Math.min(300000, total_income * 0.30);
+      thaiesgExtraTransferVal = Math.min(thaiesgExtraTransferVal, maxExtraLimit);
+      thaiesgExtraNewVal = Math.min(thaiesgExtraNewVal, maxExtraLimit);
+    }
+    
+    total_investment_deductions = insurance_total + parent_health_val + retirement_total + thaiesgVal + thaiesgExtraTransferVal + thaiesgExtraNewVal + socialEntVal;
   }
 
   // Donation and Stimulus Deductions
@@ -222,7 +235,14 @@ function calculateTax() {
     taxDueReal.innerText = '';
     taxSummaryDiv.style.display = 'block';
   } else {
-    taxSummaryDiv.style.display = 'none';
+    // When tax due is exactly zero
+    taxDueReal.innerText = "ดีใจด้วย ท่านไม่ต้องจ่ายภาษี!";
+    taxDueReal.style.color = '#007bff';
+    taxDueReal.style.fontWeight = 'bold';
+    taxDueReal.style.fontSize = '1.5em';
+    taxDueReal.style.fontFamily = 'Kanit, sans-serif';
+    taxCreditRefund.innerText = '';
+    taxSummaryDiv.style.display = 'block';
   }
   
   // Compute leftover for recommended investments
@@ -266,6 +286,17 @@ function calculateTax() {
   }
   updateInvestmentDisplay('max_rmf', leftoverRMF);
   updateInvestmentDisplay('max_thaiesg', leftoverThaiesg);
+  
+  if (selectedTaxYear === 2568) {
+    const thaiesgExtraNewLimit = Math.min(300000, total_income * 0.30);
+    const currentThaiesgExtraNew = parseNumber(document.getElementById('thaiesg_extra_new').value);
+    let leftoverThaiesgExtraNew = thaiesgExtraNewLimit - currentThaiesgExtraNew;
+    if (leftoverThaiesgExtraNew < 0) leftoverThaiesgExtraNew = 0;
+    updateInvestmentDisplay('max_thaiesg_extra_new', leftoverThaiesgExtraNew);
+    document.getElementById('max_thaiesg_extra_container').style.display = 'block';
+  } else {
+    document.getElementById('max_thaiesg_extra_container').style.display = 'none';
+  }
   
   isTaxCalculated = true;
   setActiveStep(4);
