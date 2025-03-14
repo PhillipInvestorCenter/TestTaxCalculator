@@ -222,34 +222,34 @@ function formatNumber(num) {
   
   function resetData() {
     // Reset global variables
-    if (typeof total_income !== 'undefined') total_income = 0;
-    if (typeof monthly_income !== 'undefined') monthly_income = 0;
-    if (typeof expense !== 'undefined') expense = 0;
-    if (typeof isTaxCalculated !== 'undefined') isTaxCalculated = false;
-    if (typeof total_withholding_tax !== 'undefined') total_withholding_tax = 0;
-    if (typeof socialSecurityManual !== 'undefined') socialSecurityManual = false;
+    total_income = 0;
+    monthly_income = 0;
+    expense = 0;
+    isTaxCalculated = false;
+    total_withholding_tax = 0;
+    socialSecurityManual = false;
   
+    // Reset all text inputs to "0"
     document.querySelectorAll('input[type="text"]').forEach((input) => {
-      if (
-        input.id === 'bonus_income' ||
-        input.id === 'other_income' ||
-        input.id === 'withholding_tax_annual_input' ||
-        input.id === 'withholding_tax_monthly_input'
-      ) {
-        input.value = '0';
-      } else {
-        input.value = '';
-      }
+      input.value = "0";
     });
   
+    // Reset all checkboxes to unchecked
     document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
       checkbox.checked = false;
     });
   
+    // Reset all radio buttons to unchecked
+    document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+      radio.checked = false;
+    });
+  
+    // Reset all select elements to the first option
     document.querySelectorAll('select').forEach((select) => {
       select.selectedIndex = 0;
     });
   
+    // Hide sections that are not visible by default
     const sectionsToHide = [
       'annual_income_section', 'withholding_tax_annual_checkbox_section', 'withholding_tax_annual_section',
       'monthly_income_section', 'withholding_tax_monthly_checkbox_section', 'withholding_tax_monthly_section',
@@ -260,15 +260,18 @@ function formatNumber(num) {
       if (elem) elem.style.display = 'none';
     });
   
+    // Reset displayed values
     document.getElementById('expense_display').innerText = '0';
     document.getElementById('result_withholding_tax').innerText = '0';
     const taxSummary = document.getElementById('tax_summary');
     if (taxSummary) taxSummary.style.display = 'none';
   
+    // Clear any error messages
     document.querySelectorAll('.error').forEach((el) => {
       el.innerText = '';
     });
   
+    // Reset the stepper and show the first step
     if (typeof setActiveStep === 'function') {
       setActiveStep(1);
     }
@@ -276,6 +279,7 @@ function formatNumber(num) {
       showStep(1);
     }
   
+    // Reset visibility: show landing page, hide main container
     const landingPage = document.getElementById('landing-page');
     const mainContainer = document.getElementById('main-container');
     if (landingPage && mainContainer) {
@@ -283,9 +287,13 @@ function formatNumber(num) {
       mainContainer.style.display = 'none';
     }
   
+    // Scroll to the top of the page
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+    // Update deduction limits after resetting
     if (typeof updateDeductionLimits === 'function') {
       updateDeductionLimits();
     }
   }
+  
   
