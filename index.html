@@ -415,6 +415,26 @@
         <input type="text" id="thaiesg" value="0" inputmode="decimal">
         <div class="info">ลดหย่อนได้ 30% ของรายได้ แต่ไม่เกิน 300,000 บาท</div>
         
+        <!-- New deduction fields for Tax Year 2568 -->
+        <div id="thaiesg_extra_container" style="display: none;">
+          <label>กองทุนรวมไทยเพื่อความยั่งยืนแบบพิเศษ (Thai ESG Extra) สำหรับรับโอนมาจากกองทุน LTF (บาท):
+            <span class="limit-label" id="thaiesg_extra_transfer_limit_label"></span>
+            <span class="error" id="thaiesg_extra_transfer_error"></span>
+          </label>
+          <input type="text" id="thaiesg_extra_transfer" value="0" inputmode="decimal">
+          <div class="info">
+            สำหรับรับโอนมาจากกองทุน LTF สูงสุด 500,000 บาท แบ่งเป็นใช้สิทธิในปี 2568 ลดหย่อนได้ 30% ของรายได้ แต่ไม่เกิน 300,000 บาท
+            และทยอยลดหย่อนอีก 200,000 บาทที่เหลือในปีที่ 2-5 จำนวนปีละไม่เกิน 50,000 บาท
+          </div>
+        
+          <label>กองทุนรวมไทยเพื่อความยั่งยืนแบบพิเศษ (Thai ESG Extra) สำหรับซื้อใหม่ (บาท):
+            <span class="limit-label" id="thaiesg_extra_new_limit_label"></span>
+            <span class="error" id="thaiesg_extra_new_error"></span>
+          </label>
+          <input type="text" id="thaiesg_extra_new" value="0" inputmode="decimal">
+          <div class="info">ลดหย่อนได้ 30% ของรายได้ แต่ไม่เกิน 300,000 บาท</div>
+        </div>
+
         <label>เงินลงทุนธุรกิจ Social Enterprise (บาท):
           <span class="limit-label" id="social_enterprise_limit_label"></span>
           <span class="error" id="social_enterprise_error"></span>
@@ -515,7 +535,10 @@
           <p><strong>SSF ที่ซื้อได้สูงสุด:</strong> <span id="max_ssf">ไม่สามารถซื้อเพิ่มได้</span></p>
           <p><strong>RMF ที่ซื้อได้สูงสุด:</strong> <span id="max_rmf">ไม่สามารถซื้อเพิ่มได้</span></p>
           <p><strong>Thai ESG ที่ซื้อได้สูงสุด:</strong> <span id="max_thaiesg">ไม่สามารถซื้อเพิ่มได้</span></p>
-        </div>
+          <div id="max_thaiesg_extra_container" style="display: none;">
+            <p><strong>Thai ESG Extra ที่ซื้อได้สูงสุด:</strong> <span id="max_thaiesg_extra_new">ไม่สามารถซื้อเพิ่มได้</span></p>
+          </div>
+        </div>        
       </div>
       <button type="button" onclick="window.open('https://forms.gle/CVxjn3UoD7t5Tpsq9', '_blank')" class="feedback-button">ให้คะแนนโปรแกรมนี้</button>
       <div class="additional-buttons">
