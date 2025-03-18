@@ -738,3 +738,100 @@ function scrollPage() {
     window.scrollTo({ top: docHeight - windowHeight, behavior: 'smooth' });
   }
 }
+
+// Reset function for Step 1 (Revenue Inputs)
+function resetPage1() {
+  // Reset revenue type checkboxes and hide their input sections
+  const revenueTypes = [
+    { checkboxId: 'rev_type_1', inputId: 'rev_type_1_input' },
+    { checkboxId: 'rev_type_2', inputId: 'rev_type_2_input' },
+    { checkboxId: 'rev_type_3', inputId: 'rev_type_3_input' },
+    { checkboxId: 'rev_type_4', inputId: 'rev_type_4_input' },
+    { checkboxId: 'rev_type_5', inputId: 'rev_type_5_input' },
+    { checkboxId: 'rev_type_6', inputId: 'rev_type_6_input' },
+    { checkboxId: 'rev_type_7', inputId: 'rev_type_7_input' }
+  ];
+  revenueTypes.forEach(item => {
+    const cb = document.getElementById(item.checkboxId);
+    if (cb) cb.checked = false;
+    const section = document.getElementById(item.inputId);
+    if (section) section.style.display = 'none';
+  });
+
+  // Reset all revenue input fields to "0"
+  const revenueFields = [
+    'rev1_amount', 'rev1_withholding_input',
+    'rev2_amount', 'rev2_withholding_input',
+    'rev3_amount', 'rev3_withholding_input',
+    'rev4_amount', 'rev4_withholding_input',
+    'rev7_amount', 'rev7_withholding_input',
+    'rev5_sub1_amount', 'rev5_sub2_amount', 'rev5_sub3_amount', 'rev5_sub4_amount', 'rev5_sub5_amount',
+    'rev5_withholding_input',
+    'rev6_sub1_amount', 'rev6_sub2_amount', 'rev6_withholding_input'
+  ];
+  revenueFields.forEach(id => {
+    const input = document.getElementById(id);
+    if (input) input.value = "0";
+  });
+
+  // Reset calculation mode to default (yearly)
+  const calcMode = document.getElementById('calc_mode');
+  if (calcMode) calcMode.value = 'year';
+
+  // Optionally, reset related global variables
+  total_income = 0;
+  monthly_income = 0;
+}
+
+// Reset function for Step 3 (Deductions)
+function resetPage3() {
+  // Reset selections in the deductions section
+  const spouse = document.getElementById('spouse');
+  if (spouse) spouse.value = 'no';
+
+  const childrenOwn = document.getElementById('children_own');
+  if (childrenOwn) childrenOwn.value = "0";
+  const childrenAdopted = document.getElementById('children_adopted');
+  if (childrenAdopted) childrenAdopted.value = "0";
+  const disabledPersons = document.getElementById('disabled_persons');
+  if (disabledPersons) disabledPersons.value = "0";
+
+  // Reset parent's checkboxes
+  ['your_father', 'your_mother', 'spouse_father', 'spouse_mother'].forEach(id => {
+    const cb = document.getElementById(id);
+    if (cb) cb.checked = false;
+  });
+
+  // Reset additional deduction checkboxes and trigger change events to hide dependent sections
+  ['has_insurance', 'has_donation', 'has_stimulus', 'has_social_security'].forEach(id => {
+    const cb = document.getElementById(id);
+    if (cb) {
+      cb.checked = false;
+      cb.dispatchEvent(new Event('change'));
+    }
+  });
+
+  // Reset all deduction-related input fields to "0"
+  const deductionInputs = [
+    'life_insurance', 'health_insurance', 'parent_health_insurance', 
+    'pension_insurance', 'ssf', 'rmf', 'pvd', 'gpf', 'thaiesg',
+    'social_enterprise', 'nsf', 'thaiesg_extra_transfer', 'thaiesg_extra_new',
+    'donation', 'donation_education', 'donation_political',
+    'easy_ereceipt', 'local_travel', 'home_loan_interest', 'new_home',
+    'social_security'
+  ];
+  deductionInputs.forEach(id => {
+    const input = document.getElementById(id);
+    if (input) input.value = "0";
+  });
+
+  // Hide dynamic sections if visible
+  const sectionsToHide = [
+    'insurance_section', 'donation_section', 'stimulus_section', 
+    'social_security_section', 'thaiesg_extra_container'
+  ];
+  sectionsToHide.forEach(id => {
+    const elem = document.getElementById(id);
+    if (elem) elem.style.display = 'none';
+  });
+}
