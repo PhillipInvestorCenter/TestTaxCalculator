@@ -87,6 +87,7 @@ input[type="text"], select {
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 1.1rem;
+  font-family: 'Kanit', sans-serif; /* Enforced Kanit for dropdown boxes */
 }
 
 .info {
@@ -167,90 +168,117 @@ input[type="checkbox"] {
   margin-left: 10px;
 }
 
-/* Stepper */
+/* ──────────────────────────────────────────────────────────────
+   NEW ARROW-STYLE STEPPER (Different Colors for Odd & Even Steps)
+   ────────────────────────────────────────────────────────────── */
 .stepper {
   display: flex;
-  justify-content: space-between;
   margin-bottom: 30px;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+/* Default (non-active) states */
+/* Odd steps (1 & 3): Darker blue */
+.stepper-step:nth-child(odd) {
+  flex: 1;
   position: relative;
-  align-items: center;
-}
-
-.stepper::before {
-  content: '';
-  position: absolute;
-  top: 26%;
-  left: 5%;
-  right: 5%;
-  height: 4px;
-  background-color: #e0e0e0;
-  z-index: 1;
-}
-
-.stepper::after {
-  content: '';
-  position: absolute;
-  top: 26%;
-  left: 0%;
-  height: 4px;
-  background-color: #007bff;
-  z-index: 2;
-  transition: width 0.3s;
-  width: 0%;
-}
-
-.stepper-step {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background-color: #6699cc;  /* darker blue */
+  color: #fff;
+  font-weight: bold;
   text-align: center;
-}
-
-.stepper-step-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #e0e0e0;
-  color: #555555;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s, color 0.3s, transform 0.3s;
-  box-sizing: border-box;
+  padding: 15px 0;
+  transition: background-color 0.3s, color 0.3s;
   cursor: pointer;
 }
 
-.stepper-step-label {
-  font-size: 0.9rem;
-  color: #555555;
-  margin-top: 8px;
+/* Even steps (2 & 4): Lighter blue */
+.stepper-step:nth-child(even) {
+  flex: 1;
+  position: relative;
+  background-color: #99ccff;  /* lighter blue */
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px 0;
+  transition: background-color 0.3s, color 0.3s;
+  cursor: pointer;
 }
 
-.stepper-step.completed .stepper-step-circle {
+/* Arrow effect for default state */
+.stepper-step:nth-child(odd)::before,
+.stepper-step:nth-child(even)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -20px;
+  width: 0;
+  height: 0;
+  border-top: 30px solid transparent;
+  border-bottom: 30px solid transparent;
+  z-index: 1;
+}
+
+/* Set arrow colors according to step parity */
+.stepper-step:nth-child(odd)::before {
+  border-left: 20px solid #6699cc;
+}
+.stepper-step:nth-child(even)::before {
+  border-left: 20px solid #99ccff;
+}
+
+/* Remove arrow on final step */
+.stepper-step:last-child::before {
+  display: none;
+}
+
+/* Active states */
+/* Odd steps active: even darker blue */
+.stepper-step:nth-child(odd).active {
+  background-color: #0056b3;
+  color: #fff;
+}
+.stepper-step:nth-child(odd).active::before {
+  border-left-color: #0056b3;
+}
+
+/* Even steps active: moderate blue */
+.stepper-step:nth-child(even).active {
   background-color: #007bff;
-  color: #ffffff;
+  color: #fff;
+}
+.stepper-step:nth-child(even).active::before {
+  border-left-color: #007bff;
 }
 
-.stepper-step.active .stepper-step-circle {
-  transform: scale(1.2);
+/* Completed states */
+/* Odd steps completed: same as odd active */
+.stepper-step:nth-child(odd).completed {
+  background-color: #0056b3;
+  color: #fff;
+}
+.stepper-step:nth-child(odd).completed::before {
+  border-left-color: #0056b3;
 }
 
-.stepper[data-current-step="1"]::after {
-  width: calc(0% - 10px);
+/* Even steps completed: same as even active */
+.stepper-step:nth-child(even).completed {
+  background-color: #007bff;
+  color: #fff;
+}
+.stepper-step:nth-child(even).completed::before {
+  border-left-color: #007bff;
 }
 
-.stepper[data-current-step="2"]::after {
-  width: calc(33.33% - 10px);
+/* If any old circular step icon exists, hide it */
+.stepper-step-circle {
+  display: none !important;
 }
 
-.stepper[data-current-step="3"]::after {
-  width: calc(63% - 10px);
-}
-
-.stepper[data-current-step="4"]::after {
-  width: calc(95% - 10px);
+/* Step labels inside each arrow */
+.stepper-step-label {
+  font-size: 1rem;
+  margin-top: 0;
 }
 
 /* Deduction Sections (colored backgrounds) */
@@ -523,12 +551,6 @@ input[type="checkbox"] {
   button {
     font-size: 1.3rem;
   }
-
-  .stepper::before,
-  .stepper::after {
-    left: 5%;
-    right: 5%;
-  }
 }
 
 /* Print Styles */
@@ -557,6 +579,7 @@ input[type="checkbox"] {
   padding-right: 20px;
 }
 
+/* Floating Reset Buttons */
 .float-reset {
   position: fixed;
   right: 20px;
@@ -571,6 +594,7 @@ input[type="checkbox"] {
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
+/* Floating Scroll Arrow Button */
 .scroll-arrow {
   position: fixed;
   right: 20px;
@@ -583,15 +607,4 @@ input[type="checkbox"] {
   z-index: 1000;
   font-size: 20px;
   display: none; /* Will be toggled via JS */
-}
-
-input[type="text"], select {
-  width: 100%;
-  padding: 14px;
-  margin-top: 8px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 1.1rem;
-  font-family: 'Kanit', sans-serif; /* Enforced Kanit for dropdown boxes */
 }
