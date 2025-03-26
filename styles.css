@@ -641,3 +641,13 @@ input[type="checkbox"] {
 .inline-checkbox input[type="checkbox"] {
   margin-right: 8px;    /* spacing between checkbox and label */
 }
+
+.new-badge {
+  background-color: #ffeb3b;
+  color: #d32f2f;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-left: 5px;
+}
