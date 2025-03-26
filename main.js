@@ -17,6 +17,7 @@ let rev4_amt = 0; // Type 4
 let rev5_amt = 0; // Type 5 (sum of sub-checks)
 let rev6_amt = 0; // Type 6 (sum of sub-checks)
 let rev7_amt = 0; // Type 7
+let rev8_amt = 0; // Type 8
 
 const retirementFields = ['pension_insurance', 'pvd', 'gpf', 'rmf', 'ssf', 'nsf'];
 const otherDeductionFields = [
@@ -42,6 +43,7 @@ window.onload = function () {
     'rev5_sub1_amount', 'rev5_sub2_amount', 'rev5_sub3_amount', 'rev5_sub4_amount', 'rev5_sub5_amount',
     'rev5_withholding_input',
     'rev6_sub1_amount', 'rev6_sub2_amount', 'rev6_withholding_input',
+    'rev8_amount', 'rev8_withholding_input', // Added for Type 8
     'bonus_income', 'other_income',
     'life_insurance', 'health_insurance', 'parent_health_insurance',
     'pension_insurance', 'ssf', 'rmf', 'pvd', 'gpf', 'thaiesg',
@@ -156,7 +158,6 @@ window.onload = function () {
   populateChildrenOptions();
 
   /* ---------------------- Floating Scroll Arrow Behavior ---------------------- */
-  // Always display the scroll arrow; update its icon based on scroll position.
   window.addEventListener("scroll", function() {
     const scrollArrow = document.getElementById("scrollArrow");
     scrollArrow.style.display = "block";
@@ -185,7 +186,8 @@ function setupRevenueTypeListeners() {
     { checkboxId: 'rev_type_4', inputId: 'rev_type_4_input' },
     { checkboxId: 'rev_type_5', inputId: 'rev_type_5_input' },
     { checkboxId: 'rev_type_6', inputId: 'rev_type_6_input' },
-    { checkboxId: 'rev_type_7', inputId: 'rev_type_7_input' }
+    { checkboxId: 'rev_type_7', inputId: 'rev_type_7_input' },
+    { checkboxId: 'rev_type_8', inputId: 'rev_type_8_input' } // New Type 8
   ];
   revenueTypes.forEach(item => {
     const cb = document.getElementById(item.checkboxId);
@@ -204,7 +206,8 @@ function setupRevenueTypeListeners() {
     { checkbox: 'rev4_withholding_checkbox', container: 'rev4_withholding_input_container' },
     { checkbox: 'rev5_withholding_checkbox', container: 'rev5_withholding_input_container' },
     { checkbox: 'rev6_withholding_checkbox', container: 'rev6_withholding_input_container' },
-    { checkbox: 'rev7_withholding_checkbox', container: 'rev7_withholding_input_container' }
+    { checkbox: 'rev7_withholding_checkbox', container: 'rev7_withholding_input_container' },
+    { checkbox: 'rev8_withholding_checkbox', container: 'rev8_withholding_input_container' } // Type 8
   ];
   withholdingIDs.forEach(item => {
     const cb = document.getElementById(item.checkbox);
@@ -309,6 +312,8 @@ function nextStep(currentStep) {
                  ? parseNumber(document.getElementById('rev4_amount').value) * multiplier : 0;
       rev7_amt = document.getElementById('rev_type_7').checked
                  ? parseNumber(document.getElementById('rev7_amount').value) * multiplier : 0;
+      rev8_amt = document.getElementById('rev_type_8').checked
+                 ? parseNumber(document.getElementById('rev8_amount').value) * multiplier : 0;
       
       // For type 5
       let sum5 = 0;
@@ -337,10 +342,10 @@ function nextStep(currentStep) {
       rev6_amt = sum6;
 
       // Total income
-      total_income = rev1_amt + rev2_amt + rev3_amt + rev4_amt + rev5_amt + rev6_amt + rev7_amt;
+      total_income = rev1_amt + rev2_amt + rev3_amt + rev4_amt + rev5_amt + rev6_amt + rev7_amt + rev8_amt;
       monthly_income = (calcMode === 'month') ? parseNumber(document.getElementById('rev1_amount').value) : total_income / 12;
       
-      // Build Step 2 UI for types 3, 5, 6, 7
+      // Build Step 2 UI for types 3, 5, 6, 7, and 8
       let customExpenseHTML = "";
       if (document.getElementById('rev_type_3').checked) {
         customExpenseHTML += `
@@ -394,24 +399,58 @@ function nextStep(currentStep) {
             </div>
           </div>`;
       }
+      if (document.getElementById('rev_type_8').checked) {
+        customExpenseHTML += `
+          <div class="custom-expense-group" id="custom_expense_8">
+            <label>สำหรับ เงินได้ประเภทที่ 8:</label>
+            <div class="radio-group">
+              <input type="radio" name="expense_choice_8" value="standard" checked> หักเหมา
+              <input type="radio" name="expense_choice_8" value="actual"> หักตามจริง
+            </div>
+            <div id="expense_actual_container_8" style="display:none;">
+              <input type="text" id="expense_actual_8" placeholder="ระบุค่าใช้จ่ายจริง" value="0" inputmode="decimal">
+            </div>
+            <div id="standard_choice_container_8" style="margin-top: 10px;">
+              <label>เลือกอัตราหักเหมา:</label>
+              <div class="radio-group">
+                <input type="radio" name="standard_rate_choice_8" value="40" checked> 40%
+                <input type="radio" name="standard_rate_choice_8" value="60"> 60%
+              </div>
+            </div>
+          </div>`;
+      }
       document.getElementById('custom_expense_options').innerHTML = customExpenseHTML;
 
       // Attach event listeners for dynamic inputs in Step 2
-      ['3','5','6','7'].forEach((type) => {
+      ['3','5','6','7','8'].forEach((type) => {
         if (!document.getElementById('custom_expense_'+type)) return;
         
         let radios = document.getElementsByName("expense_choice_" + type);
         radios.forEach(radio => {
           radio.addEventListener('change', function() {
-            const container = document.getElementById("expense_actual_container_" + type);
-            if (this.value === "actual") {
-              const actualInput = document.getElementById("expense_actual_"+type);
-              if (actualInput) actualInput.value = "0";
-              container.style.display = 'block';
+            if (type === '8') {
+              const actualContainer = document.getElementById("expense_actual_container_" + type);
+              const standardContainer = document.getElementById("standard_choice_container_" + type);
+              if (this.value === "actual") {
+                if (actualContainer) actualContainer.style.display = 'block';
+                if (standardContainer) standardContainer.style.display = 'none';
+                const actualInput = document.getElementById("expense_actual_"+type);
+                if (actualInput) actualInput.value = "0";
+              } else {
+                if (actualContainer) actualContainer.style.display = 'none';
+                if (standardContainer) standardContainer.style.display = 'block';
+              }
             } else {
-              container.style.display = 'none';
+              const container = document.getElementById("expense_actual_container_" + type);
+              if (this.value === "actual") {
+                const actualInput = document.getElementById("expense_actual_"+type);
+                if (actualInput) actualInput.value = "0";
+                container.style.display = 'block';
+              } else {
+                container.style.display = 'none';
+              }
             }
-            recalcExpenses(); 
+            recalcExpenses();
           });
         });
 
@@ -423,6 +462,15 @@ function nextStep(currentStep) {
           });
           actualInput.addEventListener('input', function() {
             recalcExpenses();
+          });
+        }
+        
+        if (type === '8') {
+          let standardRadios = document.getElementsByName("standard_rate_choice_8");
+          standardRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+              recalcExpenses();
+            });
           });
         }
       });
@@ -445,6 +493,7 @@ function nextStep(currentStep) {
  * Recalculates the total expense in real time (Step 2) and updates the display.
  */
 function recalcExpenses() {
+  let multiplier = (document.getElementById('calc_mode').value === 'month') ? 12 : 1;
   let expense_12 = Math.min((rev1_amt + rev2_amt) * 0.5, 100000);
 
   let expense_3 = 0;
@@ -466,27 +515,22 @@ function recalcExpenses() {
       let calc = 0;
       if(document.getElementById('rev5_sub_1').checked) {
         let subVal = parseNumber(document.getElementById('rev5_sub1_amount').value);
-        let multiplier = (document.getElementById('calc_mode').value === 'month') ? 12 : 1;
         calc += subVal * multiplier * 0.30;
       }
       if(document.getElementById('rev5_sub_2').checked) {
         let subVal = parseNumber(document.getElementById('rev5_sub2_amount').value);
-        let multiplier = (document.getElementById('calc_mode').value === 'month') ? 12 : 1;
         calc += subVal * multiplier * 0.20;
       }
       if(document.getElementById('rev5_sub_3').checked) {
         let subVal = parseNumber(document.getElementById('rev5_sub3_amount').value);
-        let multiplier = (document.getElementById('calc_mode').value === 'month') ? 12 : 1;
         calc += subVal * multiplier * 0.15;
       }
       if(document.getElementById('rev5_sub_4').checked) {
         let subVal = parseNumber(document.getElementById('rev5_sub4_amount').value);
-        let multiplier = (document.getElementById('calc_mode').value === 'month') ? 12 : 1;
         calc += subVal * multiplier * 0.30;
       }
       if(document.getElementById('rev5_sub_5').checked) {
         let subVal = parseNumber(document.getElementById('rev5_sub5_amount').value);
-        let multiplier = (document.getElementById('calc_mode').value === 'month') ? 12 : 1;
         calc += subVal * multiplier * 0.10;
       }
       expense_5 = calc;
@@ -502,12 +546,10 @@ function recalcExpenses() {
       let calc = 0;
       if(document.getElementById('rev6_sub_1').checked) {
         let subVal = parseNumber(document.getElementById('rev6_sub1_amount').value);
-        let multiplier = (document.getElementById('calc_mode').value === 'month') ? 12 : 1;
         calc += subVal * multiplier * 0.60;
       }
       if(document.getElementById('rev6_sub_2').checked) {
         let subVal = parseNumber(document.getElementById('rev6_sub2_amount').value);
-        let multiplier = (document.getElementById('calc_mode').value === 'month') ? 12 : 1;
         calc += subVal * multiplier * 0.30;
       }
       expense_6 = calc;
@@ -520,12 +562,23 @@ function recalcExpenses() {
     if (choice7 && choice7.value === "actual") {
       expense_7 = parseNumber(document.getElementById('expense_actual_7').value) || 0;
     } else {
-      let multiplier = (document.getElementById('calc_mode').value === 'month') ? 12 : 1;
       expense_7 = parseNumber(document.getElementById('rev7_amount').value) * multiplier * 0.60;
     }
   }
+  
+  let expense_8 = 0;
+  if (document.getElementById('rev_type_8').checked) {
+    let choice8 = document.querySelector('input[name="expense_choice_8"]:checked');
+    if (choice8 && choice8.value === "actual") {
+      expense_8 = parseNumber(document.getElementById('expense_actual_8').value) || 0;
+    } else {
+      let standardChoice = document.querySelector('input[name="standard_rate_choice_8"]:checked');
+      let rate = (standardChoice && standardChoice.value === "60") ? 0.60 : 0.40;
+      expense_8 = parseNumber(document.getElementById('rev8_amount').value) * multiplier * rate;
+    }
+  }
 
-  expense = expense_12 + expense_3 + expense_5 + expense_6 + expense_7;
+  expense = expense_12 + expense_3 + expense_5 + expense_6 + expense_7 + expense_8;
   document.getElementById('expense_display').innerText = formatNumber(expense);
 }
 
@@ -608,6 +661,8 @@ function validateStep(stepNumber) {
           amt = sum;
         } else if (cb.value === "7") {
           amt = parseNumber(document.getElementById('rev7_amount')?.value || "0");
+        } else if (cb.value === "8") {
+          amt = parseNumber(document.getElementById('rev8_amount')?.value || "0");
         }
         if (amt > 0) valid = true;
       }
@@ -656,13 +711,13 @@ function resetData() {
   // Hide dynamic sections
   const sectionsToHide = [
     'rev_type_1_input', 'rev_type_2_input', 'rev_type_3_input', 'rev_type_4_input',
-    'rev_type_5_input', 'rev_type_6_input', 'rev_type_7_input',
+    'rev_type_5_input', 'rev_type_6_input', 'rev_type_7_input', 'rev_type_8_input',
     'rev1_withholding_input_container', 'rev2_withholding_input_container',
     'rev3_withholding_input_container', 'rev4_withholding_input_container',
     'rev5_withholding_input_container', 'rev6_withholding_input_container',
-    'rev7_withholding_input_container',
+    'rev7_withholding_input_container', 'rev8_withholding_input_container',
     'expense_actual_container_3', 'expense_actual_container_5',
-    'expense_actual_container_6', 'expense_actual_container_7',
+    'expense_actual_container_6', 'expense_actual_container_7', 'expense_actual_container_8',
     'insurance_section', 'donation_section', 'stimulus_section',
     'social_security_section', 'thaiesg_extra_container'
   ];
@@ -749,7 +804,8 @@ function resetPage1() {
     { checkboxId: 'rev_type_4', inputId: 'rev_type_4_input' },
     { checkboxId: 'rev_type_5', inputId: 'rev_type_5_input' },
     { checkboxId: 'rev_type_6', inputId: 'rev_type_6_input' },
-    { checkboxId: 'rev_type_7', inputId: 'rev_type_7_input' }
+    { checkboxId: 'rev_type_7', inputId: 'rev_type_7_input' },
+    { checkboxId: 'rev_type_8', inputId: 'rev_type_8_input' }
   ];
   revenueTypes.forEach(item => {
     const cb = document.getElementById(item.checkboxId);
@@ -765,6 +821,7 @@ function resetPage1() {
     'rev3_amount', 'rev3_withholding_input',
     'rev4_amount', 'rev4_withholding_input',
     'rev7_amount', 'rev7_withholding_input',
+    'rev8_amount', 'rev8_withholding_input',
     'rev5_sub1_amount', 'rev5_sub2_amount', 'rev5_sub3_amount', 'rev5_sub4_amount', 'rev5_sub5_amount',
     'rev5_withholding_input',
     'rev6_sub1_amount', 'rev6_sub2_amount', 'rev6_withholding_input'
