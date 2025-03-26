@@ -149,48 +149,59 @@
         </div>
         <div id="rev_type_5_input" style="display: none;">
           <p>เลือกและกรอกจำนวนเงินสำหรับแต่ละประเภท (อัตราหักค่าใช้จ่าย):</p>
-          <div class="sub-section">
+          
+          <!-- บ้าน, โรงเรือน, สิ่งปลูกสร้าง, แพ -->
+          <div class="sub-section inline-checkbox">
             <input type="checkbox" id="rev5_sub_1">
             <label for="rev5_sub_1">บ้าน, โรงเรือน, สิ่งปลูกสร้าง, แพ</label>
-            <div id="rev5_sub_1_input" style="display: none;">
-              <label>จำนวนเงิน (บาท):</label>
-              <input type="text" id="rev5_sub1_amount" value="0" inputmode="decimal">
-            </div>
           </div>
-          <div class="sub-section">
+          <div id="rev5_sub_1_input" class="sub-section" style="display: none;">
+            <label>จำนวนเงิน (บาท):</label>
+            <input type="text" id="rev5_sub1_amount" value="0" inputmode="decimal">
+          </div>
+
+          <!-- ที่ดินที่ใช้ในการเกษตร -->
+          <div class="sub-section inline-checkbox">
             <input type="checkbox" id="rev5_sub_2">
             <label for="rev5_sub_2">ที่ดินที่ใช้ในการเกษตร</label>
-            <div id="rev5_sub_2_input" style="display: none;">
-              <label>จำนวนเงิน (บาท):</label>
-              <input type="text" id="rev5_sub2_amount" value="0" inputmode="decimal">
-            </div>
           </div>
-          <div class="sub-section">
+          <div id="rev5_sub_2_input" class="sub-section" style="display: none;">
+            <label>จำนวนเงิน (บาท):</label>
+            <input type="text" id="rev5_sub2_amount" value="0" inputmode="decimal">
+          </div>
+
+          <!-- ที่ดินที่มิได้ใช้ในการเกษตร -->
+          <div class="sub-section inline-checkbox">
             <input type="checkbox" id="rev5_sub_3">
             <label for="rev5_sub_3">ที่ดินที่มิได้ใช้ในการเกษตร</label>
-            <div id="rev5_sub_3_input" style="display: none;">
-              <label>จำนวนเงิน (บาท):</label>
-              <input type="text" id="rev5_sub3_amount" value="0" inputmode="decimal">
-            </div>
           </div>
-          <div class="sub-section">
+          <div id="rev5_sub_3_input" class="sub-section" style="display: none;">
+            <label>จำนวนเงิน (บาท):</label>
+            <input type="text" id="rev5_sub3_amount" value="0" inputmode="decimal">
+          </div>
+
+          <!-- ยานพาหนะ -->
+          <div class="sub-section inline-checkbox">
             <input type="checkbox" id="rev5_sub_4">
             <label for="rev5_sub_4">ยานพาหนะ</label>
-            <div id="rev5_sub_4_input" style="display: none;">
-              <label>จำนวนเงิน (บาท):</label>
-              <input type="text" id="rev5_sub4_amount" value="0" inputmode="decimal">
-            </div>
           </div>
-          <div class="sub-section">
+          <div id="rev5_sub_4_input" class="sub-section" style="display: none;">
+            <label>จำนวนเงิน (บาท):</label>
+            <input type="text" id="rev5_sub4_amount" value="0" inputmode="decimal">
+          </div>
+
+          <!-- ทรัพย์สินอื่น -->
+          <div class="sub-section inline-checkbox">
             <input type="checkbox" id="rev5_sub_5">
             <label for="rev5_sub_5">ทรัพย์สินอื่น</label>
-            <div id="rev5_sub_5_input" style="display: none;">
-              <label>จำนวนเงิน (บาท):</label>
-              <input type="text" id="rev5_sub5_amount" value="0" inputmode="decimal">
-            </div>
           </div>
+          <div id="rev5_sub_5_input" class="sub-section" style="display: none;">
+            <label>จำนวนเงิน (บาท):</label>
+            <input type="text" id="rev5_sub5_amount" value="0" inputmode="decimal">
+          </div>
+
           <!-- Withholding Tax for Type 5 -->
-          <div class="sub-section" style="display: flex; align-items: center; gap: 8px;">
+          <div class="sub-section inline-checkbox" style="gap: 8px;">
             <input type="checkbox" id="rev5_withholding_checkbox">
             <label for="rev5_withholding_checkbox">มีภาษีหัก ณ ที่จ่าย</label>
           </div>
@@ -199,7 +210,7 @@
             <input type="text" id="rev5_withholding_input" value="0" inputmode="decimal">
           </div>
         </div>
-        
+
         <!-- Type 6 -->
         <div class="checkbox-group">
           <input type="checkbox" id="rev_type_6" name="rev_type" value="6">
@@ -207,24 +218,29 @@
         </div>
         <div id="rev_type_6_input" style="display: none;">
           <p>เลือกและกรอกจำนวนเงินสำหรับแต่ละประเภท (อัตราหักค่าใช้จ่าย):</p>
-          <div class="sub-section">
+
+          <!-- ประกอบโรคศิลปะ -->
+          <div class="sub-section inline-checkbox">
             <input type="checkbox" id="rev6_sub_1">
             <label for="rev6_sub_1">ประกอบโรคศิลปะ</label>
-            <div id="rev6_sub_1_input" style="display: none;">
-              <label>จำนวนเงิน (บาท):</label>
-              <input type="text" id="rev6_sub1_amount" value="0" inputmode="decimal">
-            </div>
           </div>
-          <div class="sub-section">
+          <div id="rev6_sub_1_input" class="sub-section" style="display: none;">
+            <label>จำนวนเงิน (บาท):</label>
+            <input type="text" id="rev6_sub1_amount" value="0" inputmode="decimal">
+          </div>
+
+          <!-- กฎหมาย, วิศวกรรม, สถาปัตยกรรม, บัญชี, ประณีตศิลปกรรม -->
+          <div class="sub-section inline-checkbox">
             <input type="checkbox" id="rev6_sub_2">
             <label for="rev6_sub_2">กฎหมาย, วิศวกรรม, สถาปัตยกรรม, บัญชี, ประณีตศิลปกรรม</label>
-            <div id="rev6_sub_2_input" style="display: none;">
-              <label>จำนวนเงิน (บาท):</label>
-              <input type="text" id="rev6_sub2_amount" value="0" inputmode="decimal">
-            </div>
           </div>
+          <div id="rev6_sub_2_input" class="sub-section" style="display: none;">
+            <label>จำนวนเงิน (บาท):</label>
+            <input type="text" id="rev6_sub2_amount" value="0" inputmode="decimal">
+          </div>
+
           <!-- Withholding Tax for Type 6 -->
-          <div class="sub-section" style="display: flex; align-items: center; gap: 8px;">
+          <div class="sub-section inline-checkbox" style="gap: 8px;">
             <input type="checkbox" id="rev6_withholding_checkbox">
             <label for="rev6_withholding_checkbox">มีภาษีหัก ณ ที่จ่าย</label>
           </div>
@@ -233,7 +249,7 @@
             <input type="text" id="rev6_withholding_input" value="0" inputmode="decimal">
           </div>
         </div>
-        
+
         <!-- Type 7 -->
         <div class="checkbox-group">
           <input type="checkbox" id="rev_type_7" name="rev_type" value="7">
@@ -254,6 +270,25 @@
         </div>
       </div>
       
+      <!-- Type 8 -->
+      <div class="checkbox-group">
+        <input type="checkbox" id="rev_type_8" name="rev_type" value="8">
+        <label for="rev_type_8">เงินได้ประเภทที่ 8 รายได้อื่น</label>
+      </div>
+      <div id="rev_type_8_input" style="display: none;">
+        <label>จำนวนเงิน (บาท):</label>
+        <input type="text" id="rev8_amount" value="0" inputmode="decimal">
+        <!-- Withholding Tax for Type 8 -->
+        <div class="sub-section" style="display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="rev8_withholding_checkbox">
+          <label for="rev8_withholding_checkbox">มีภาษีหัก ณ ที่จ่าย</label>
+        </div>
+        <div id="rev8_withholding_input_container" class="sub-section" style="display: none;">
+          <label>จำนวนภาษี (บาท):</label>
+          <input type="text" id="rev8_withholding_input" value="0" inputmode="decimal">
+        </div>
+      </div>
+
       <div class="navigation-buttons">
         <button type="button" onclick="prevStep(1)" disabled>ย้อนกลับ</button>
         <button type="button" onclick="nextStep(1)">ถัดไป</button>
