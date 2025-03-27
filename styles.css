@@ -650,23 +650,23 @@ input[type="checkbox"] {
    MOBILE FIX: Convert arrow-stepper to vertical on small screens
    ─────────────────────────────────────────────────────────
 */
-@media (max-width: 600px) {
-  .stepper {
-    flex-direction: column;    /* stack steps vertically */
-    overflow: visible;
-  }
+@media (max-width: 480px) {
+  /* Reduce padding & font size on small screens */
   .stepper-step {
-    width: 100%;
-    margin-bottom: 10px;
-    border-radius: 0;         /* remove corner rounding if desired */
-    position: relative;
+    padding: 10px 0;
+    font-size: 0.8rem;
   }
-  /* Remove the arrow shapes on mobile */
+  /* Make the arrow narrower so it won't break the layout */
   .stepper-step:nth-child(odd)::before,
   .stepper-step:nth-child(even)::before {
-    content: none;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-left-width: 20px;
+    right: -10px;
   }
-  .stepper-step:last-child::before {
-    display: none;
+  /* Optional: Prevent text from wrapping within each step */
+  .stepper-step-label {
+    white-space: nowrap;
   }
 }
+
