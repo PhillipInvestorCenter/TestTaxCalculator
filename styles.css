@@ -1,3 +1,5 @@
+/* main styles.css */
+
 /* Base and Global */
 body {
   font-family: 'Kanit', sans-serif;
@@ -337,9 +339,6 @@ input[type="checkbox"] {
   font-weight: 600; /* or 'normal' if you prefer */
 }
 
-/* If you previously had .tax-due-real { font-size: 1.5em; color: red; }, etc., 
-   remove or comment them out to avoid conflict */
-
 /* Additional Buttons for printing or saving */
 .additional-buttons {
   display: flex;
@@ -626,12 +625,6 @@ input[type="checkbox"] {
   font-weight: 600;
 }
 
-/* So that “ภาษีที่ต้องชำระจริง” or “จำนวนเงินที่คุณต้องขอเครดิตคืน” lines remain aligned */
-.tax-due-real,
-.tax-credit-refund {
-  margin: 0;
-}
-
 /* Add somewhere in styles.css */
 .inline-checkbox {
   display: flex;
@@ -650,4 +643,30 @@ input[type="checkbox"] {
   font-size: 0.9rem;
   font-weight: bold;
   margin-left: 5px;
+}
+
+/* 
+   ─────────────────────────────────────────────────────────
+   MOBILE FIX: Convert arrow-stepper to vertical on small screens
+   ─────────────────────────────────────────────────────────
+*/
+@media (max-width: 600px) {
+  .stepper {
+    flex-direction: column;    /* stack steps vertically */
+    overflow: visible;
+  }
+  .stepper-step {
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 0;         /* remove corner rounding if desired */
+    position: relative;
+  }
+  /* Remove the arrow shapes on mobile */
+  .stepper-step:nth-child(odd)::before,
+  .stepper-step:nth-child(even)::before {
+    content: none;
+  }
+  .stepper-step:last-child::before {
+    display: none;
+  }
 }
