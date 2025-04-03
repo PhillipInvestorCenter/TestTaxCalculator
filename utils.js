@@ -295,23 +295,3 @@ function formatNumber(num) {
       updateDeductionLimits();
     }
   }
-  
-  function openAppLink() {
-    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    
-    // For Android devices
-    if (/android/i.test(userAgent)) {
-      // Replace 'com.yourapp.package' with your app's actual package name.
-      window.location.href = 'intent://f.aspx#Intent;scheme=https;package=com.yourapp.package;end';
-    } 
-    // For iOS devices
-    else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-      // Replace 'myapp' with your app's custom URL scheme registered in your app.
-      window.location.href = 'myapp://f.aspx';
-    } 
-    // Fallback for other devices
-    else {
-      window.location.href = 'https://www1.poems.in.th/f.aspx';
-    }
-  }
-  
