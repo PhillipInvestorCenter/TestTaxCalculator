@@ -651,3 +651,22 @@ input[type="checkbox"] {
   font-weight: bold;
   margin-left: 5px;
 }
+
+.investment-button {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #fd7e14;  /* New color: orange */
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+  font-family: 'Kanit', sans-serif;
+  width: 100%;
+}
+
+.investment-button:hover {
+  background-color: #e76c00;
+  transform: scale(1.05);
+}
